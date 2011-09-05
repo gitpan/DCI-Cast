@@ -1,0 +1,141 @@
+NAME
+    DCI::Cast - Implementation of a DCI concept of roles, named 'cast' to
+    avoid conflict with other concepts named 'role'.
+
+DESCRIPTION
+    Most implementations of roles take the form of a mixin applied to a
+    package at build-time. For most cases build-time mixin is adequate.
+    However sometimes you want to add methods to a package which you do not
+    control. Even worse the instance of the object you are using may be
+    constructed in code you don't control making subclassing difficult. In
+    these cases you might get a patch applied upstream, otherwise you may
+    need to resort to monkey patching, or your own hacked version of the
+    library.
+
+    DCI::Cast provides an alternate way to solve this problem. The DCI
+    concept of roles usually refers to method injecting at run-time. That is
+    adding the methods to the object when they are needed, until the task
+    that needs them is complete when they cease to clutter the core object.
+    That is what a Cast object does.
+
+    You write a cast much the same way you would write a subclass. The
+    difference is that you construct the cast by providing an existing
+    instance of the object to which you wish to apply new methods. You will
+    then get an object that contains the new methods you specified, as well
+    as the original methods of the core object. You cast can simply refer to
+    'self' to use the underlying core object.
+
+    Your core object will not be contaminated by the new methods anywhere in
+    the code except where used under the cast. The cast will also masquerade
+    as the underlying object, and can be used in any code that verifies you
+    object is of the underlying core type. You may call any method defined
+    in the cast, or the core objects inheritance tree.
+
+SYNOPSIS
+    Package for a 'core' object:
+
+        package MyRoot;
+        sub foo { 'foo' }
+        sub abstract { die "override this" }
+
+    package for our Cast object:
+
+        package MyCast;
+
+        # This automatically adds DCI::Cast::Object to this packages @ISA.
+        use DCI::Cast;
+
+        # Require that any core object provided implement the 'foo' method
+        depends_on qw/foo/;
+
+        # Require that any core object provided be of one of these packages
+        restrict_core qw/MyRoot OtherRoot/;
+
+        sub foobar {
+            my $self = shift;
+            return $self->foo() . "bar";
+        }
+
+        # The constructor will call init with all params provided to the
+        # constructor except the first argument which is the core object.
+        sub init {
+            my $self = shift;
+            my %params = @_;
+            ...
+        }
+
+        # Here we override the base class 'abstract' method
+        sub abstract {
+            my $self = shift;
+            ...
+
+            # If we want to call the 'abstract' method on core:
+            $self->CORE->abstract();
+        }
+
+    Use the cast:
+
+        package Something;
+        use Test::More;
+
+        use MyRoot;
+        use MyCast;
+
+        my $core = bless( {}, MyRoot );
+        my $cast = MyCast->new( $core, %PARAMS );
+
+        is( $cast->foobar, "foobar", "Called method on cast" );
+        is( $cast->foo, "foo", "Called method on core" );
+
+EXPORTS
+    When you use DCI::Core it imports the following functions that allow you
+    to manipulate metadata for the Cast object.
+
+    $meta = CAST_META()
+        Get the metadata hash for this Cast class.
+
+    @dependancies = depends_on( @add_dependancies )
+        Get/add to the methods a core object must implement for this cast.
+
+    @restrictions = restrict_core( @add_options )
+        Get/add to the classes that are allowed to act as a 'core' object.
+
+CAST CLASS/OBJECT METHODS
+    These are methods defined by the DCI::Cast::Object package:
+
+    my $cast = $class->new( $core, %params )
+        Create a new instance of the cast around the core object $core.
+        Anything in %params will be passed to init() if a method of that
+        name exists.
+
+    my $core = $cast->CORE()
+        Get the core object around which the cast instance is built.
+
+    my $subref = $cast->can( $method_name )
+        Implementation of can() which will check the cast first, then the
+        core.
+
+    my $bool = $cast->isa( $package_name )
+        Implementation of isa which will check the cast first, then the
+        core.
+
+    AUTOLOAD()
+        Documented for completeness, do not override.
+
+DCI RESOURCES
+    <http://www.artima.com/articles/dci_vision.html>
+    <http://en.wikipedia.org/wiki/Data,_Context_and_Interaction>
+    <https://sites.google.com/a/gertrudandcope.com/www/thedciarchitecture>
+
+AUTHORS
+    Chad Granum exodist7@gmail.com
+
+COPYRIGHT
+    Copyright (C) 2011 Chad Granum
+
+    DCI-Cast is free software; Standard perl licence.
+
+    DCI-Cast is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+

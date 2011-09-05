@@ -1,0 +1,30 @@
+---
+abstract: "Implementation of a DCI concept of roles, named 'cast' to avoid\nconflict with other concepts named 'role'."
+author:
+  - 'Chad Granum <exodist7@gmail.com>'
+build_requires:
+  Fennec: 1.011
+configure_requires:
+  Module::Build: 0.38
+dynamic_config: 1
+generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.110440'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: DCI-Cast
+provides:
+  DCI::Cast:
+    file: lib/DCI/Cast.pm
+    version: 0.001
+  DCI::Cast::Object:
+    file: lib/DCI/Cast/Object.pm
+    version: 0
+requires:
+  Carp: 0
+  Exporter::Declare: 0
+resources:
+  bugtracker: http://github.com/exodist/DCI-Cast/issues
+  license: http://dev.perl.org/licenses/
+  repository: http://github.com/exodist/DCI-Cast
+version: 0.001

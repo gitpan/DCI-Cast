@@ -1,0 +1,8 @@
+Build.PL
+lib/DCI/Cast.pm
+lib/DCI/Cast/Object.pm
+MANIFEST			This list of files
+t/cast.t
+README
+META.yml
+META.json

@@ -1,0 +1,57 @@
+{
+   "abstract" : "Implementation of a DCI concept of roles, named 'cast' to avoid\nconflict with other concepts named 'role'.",
+   "author" : [
+      "Chad Granum <exodist7@gmail.com>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110440",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "DCI-Cast",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Fennec" : "1.011"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.38"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Carp" : 0,
+            "Exporter::Declare" : 0
+         }
+      }
+   },
+   "provides" : {
+      "DCI::Cast" : {
+         "file" : "lib/DCI/Cast.pm",
+         "version" : "0.001"
+      },
+      "DCI::Cast::Object" : {
+         "file" : "lib/DCI/Cast/Object.pm",
+         "version" : 0
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "http://github.com/exodist/DCI-Cast/issues"
+      },
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
+      "repository" : {
+         "url" : "http://github.com/exodist/DCI-Cast"
+      }
+   },
+   "version" : "0.001"
+}
